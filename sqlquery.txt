@@ -1,0 +1,93 @@
+CREATE TABLE assignment3cp363.customerinfo (
+  credit_score INT NOT NULL,
+  customer_phone_number VARCHAR(45) NOT NULL,
+  customer_name VARCHAR(45) NOT NULL,
+  customerID INT NOT NULL,
+  branchID INT NOT NULL,
+  customer_email VARCHAR(45) NOT NULL,
+  PRIMARY KEY (customerID));
+ALTER TABLE assignment3cp363.customerinfo 
+	ADD CONSTRAINT FK_BranchID_BranchLocation FOREIGN KEY (branchID)
+		REFERENCES assignment3cp363.bankbranchlocation (branchID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+;
+CREATE TABLE assignment3cp363.bankbranchlocation (
+  branchID INT NOT NULL,
+  branch_address VARCHAR(45) NOT NULL,
+  employeeID INT NOT NULL,
+  PRIMARY KEY (branchID));
+  
+ALTER TABLE assignment3cp363.bankbranchlocation 
+	ADD CONSTRAINT FK_EmployeeID_Employee FOREIGN KEY (employeeID)
+		REFERENCES assignment3cp363.employees (employeeID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+;
+
+CREATE TABLE assignment3cp363.employees (
+	employeeID INT NOT NULL, 
+    employee_name VARCHAR(45) NOT NULL,
+    position VARCHAR(45) NOT NULL, 
+    department VARCHAR(45) NOT NULL, 
+    employee_phone_number VARCHAR(45) NOT NULL, 
+    employee_email VARCHAR(45) NOT NULL,
+    assignmentID INT NOT NULL,
+    PRIMARY KEY (employeeID));
+    
+ALTER TABLE assignment3cp363.employees
+	ADD CONSTRAINT FK_AssignmentID_CustomerAssignment FOREIGN KEY (assignmentID)
+		REFERENCES assignment3cp363.customerassignment (assignmentID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+;
+        
+CREATE TABLE assignment3cp363.customerassignment (
+	assignmentID INT NOT NULL,
+    customerID INT NOT NULL,
+    PRIMARY KEY (assignmentID));
+
+ALTER TABLE assignment3cp363.customerassignment 
+	ADD CONSTRAINT FK_CustomerID_CustomerIdentification FOREIGN KEY (customerID)
+		REFERENCES assignment3cp363.customerinfo (customerID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+;
+
+CREATE TABLE assignment3cp363.authentication (
+	customer_username VARCHAR(45) NOT NULL,
+    customer_password VARCHAR(45) NOT NULL,
+    customer_phone_number VARCHAR(45) NOT NULL,
+    customer_email VARCHAR(45) NOT NULL,
+    security_questions VARCHAR(45) NOT NULL,
+    accountID INT NOT NULL,
+    PRIMARY KEY (customer_username));
+
+CREATE TABLE assignment3cp363.accounts (
+	accountID INT NOT NULL,
+    close_date VARCHAR(45) NOT NULL,
+    open_date VARCHAR(45) NOT NULL,
+    balance DECIMAL(10) NOT NULL,
+    loanID INT NOT NULL,
+    PRIMARY KEY (accountID));
+    
+CREATE TABLE assignment3cp363.loan (
+	loanID INT NOT NULL,
+    loan_balance DECIMAL(10) NOT NULL,
+    loan_type VARCHAR(45) NOT NULL,
+    PRIMARY KEY (loanID));
+
+    
+ALTER TABLE assignment3cp363.authentication
+	ADD CONSTRAINT FK_AccountID FOREIGN KEY (accountID)
+		REFERENCES assignment3cp363.accounts (accountID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+;
+
+ALTER TABLE assignment3cp363.accounts
+	ADD CONSTRAINT FK_LoanID FOREIGN KEY (loanID)
+		REFERENCES assignment3cp363.loan (loanID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+;
